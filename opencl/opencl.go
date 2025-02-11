@@ -17,14 +17,15 @@ import "C"
 import "unsafe"
 
 type (
-	CL_UINT          C.cl_uint
-	CL_PLATFORM_ID   C.cl_platform_id
-	CL_INT           C.cl_int
-	CL_PLATFORM_INFO C.cl_platform_info
-	CL_SIZE_T        C.size_t
-	CL_DEVICE_TYPE   C.cl_device_type
-	CL_DEVICE_ID     C.cl_device_id
-	CL_DEVICE_INFO   C.cl_device_info
+	CL_UINT                      C.cl_uint
+	CL_PLATFORM_ID               C.cl_platform_id
+	CL_INT                       C.cl_int
+	CL_PLATFORM_INFO             C.cl_platform_info
+	CL_SIZE_T                    C.size_t
+	CL_DEVICE_TYPE               C.cl_device_type
+	CL_DEVICE_ID                 C.cl_device_id
+	CL_DEVICE_INFO               C.cl_device_info
+	CL_DEVICE_PARTITION_PROPERTY C.cl_device_partition_property
 )
 
 // OpenCL Platform Layer
@@ -114,6 +115,18 @@ const (
 	CL_DRIVER_VERSION                       CL_DEVICE_INFO = C.CL_DRIVER_VERSION
 )
 
+const (
+	CL_DEVICE_PARTITION_EQUALLY                  CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_PARTITION_EQUALLY
+	CL_DEVICE_PARTITION_BY_COUNTS                CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_PARTITION_BY_COUNTS
+	CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN       CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN
+	CL_DEVICE_AFFINITY_DOMAIN_NUMA               CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_AFFINITY_DOMAIN_NUMA
+	CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE           CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE
+	CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE           CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE
+	CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE           CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE
+	CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE           CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE
+	CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE
+)
+
 func CLGetPlatformIDs(numEntries CL_UINT, platforms []CL_PLATFORM_ID, numPlatforms *CL_UINT) CL_INT {
 	numEntries_ := (C.cl_uint)(numEntries)
 	var platforms_ *C.cl_platform_id
@@ -147,4 +160,23 @@ func CLGetDeviceInfo(device CL_DEVICE_ID, paramName CL_DEVICE_INFO, paramValueSi
 	paramValueSize_ := (C.size_t)(paramValueSize)
 	paramValueSizeRet_ := (*C.size_t)(paramValueSizeRet)
 	return CL_INT(C.clGetDeviceInfo(device_, paramName_, paramValueSize_, paramValue, paramValueSizeRet_))
+}
+
+func CLCreateSubDevices(inDevice CL_DEVICE_ID, properties *CL_DEVICE_PARTITION_PROPERTY, numDevices CL_UINT, outDevices *CL_DEVICE_ID, numDevicesRet *CL_UINT) CL_INT {
+	inDevice_ := (C.cl_device_id)(inDevice)
+	properties_ := (*C.cl_device_partition_property)(properties)
+	numDevices_ := (C.cl_uint)(numDevices)
+	outDevices_ := (*C.cl_device_id)(outDevices)
+	numDevicesRet_ := (*C.cl_uint)(numDevicesRet)
+	return CL_INT(C.clCreateSubDevices(inDevice_, properties_, numDevices_, outDevices_, numDevicesRet_))
+}
+
+func CLRetainDevice(device CL_DEVICE_ID) CL_INT {
+	device_ := (C.cl_device_id)(device)
+	return CL_INT(C.clRetainDevice(device_))
+}
+
+func clReleaseDevice(device CL_DEVICE_ID) CL_INT {
+	device_ := (C.cl_device_id)(device)
+	return CL_INT(C.clReleaseDevice(device_))
 }
