@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
-	fmt.Printf("OpenCL Go Driver\n")
+	fmt.Println("OpenCL Go Driver")
 }
