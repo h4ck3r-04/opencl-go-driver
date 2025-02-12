@@ -14,7 +14,9 @@ package opencl
 #endif
 */
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
 type (
 	CL_UINT                      C.cl_uint
@@ -26,6 +28,9 @@ type (
 	CL_DEVICE_ID                 C.cl_device_id
 	CL_DEVICE_INFO               C.cl_device_info
 	CL_DEVICE_PARTITION_PROPERTY C.cl_device_partition_property
+	CL_CONTEXT                   C.cl_context
+	CL_CONTEXT_PROPERTIES        C.cl_context_properties
+	CL_CONTEXT_INFO              C.cl_context_info
 )
 
 // OpenCL Platform Layer
@@ -115,6 +120,7 @@ const (
 	CL_DRIVER_VERSION                       CL_DEVICE_INFO = C.CL_DRIVER_VERSION
 )
 
+// Partition Properties Constants
 const (
 	CL_DEVICE_PARTITION_EQUALLY                  CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_PARTITION_EQUALLY
 	CL_DEVICE_PARTITION_BY_COUNTS                CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_PARTITION_BY_COUNTS
@@ -125,6 +131,20 @@ const (
 	CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE           CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE
 	CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE           CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE
 	CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE CL_DEVICE_PARTITION_PROPERTY = C.CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE
+)
+
+// OpenCL Context Properties Constants
+const (
+	CL_CONTEXT_PLATFORM          CL_CONTEXT_PROPERTIES = C.CL_CONTEXT_PLATFORM
+	CL_CONTEXT_INTEROP_USER_SYNC CL_CONTEXT_PROPERTIES = C.CL_CONTEXT_INTEROP_USER_SYNC
+)
+
+// OpenCL Context Info Constants
+const (
+	CL_CONTEXT_REFERENCE_COUNT CL_CONTEXT_INFO = C.CL_CONTEXT_REFERENCE_COUNT
+	CL_CONTEXT_DEVICES         CL_CONTEXT_INFO = C.CL_CONTEXT_DEVICES
+	CL_CONTEXT_NUM_DEVICES     CL_CONTEXT_INFO = C.CL_CONTEXT_NUM_DEVICES
+	CL_CONTEXT_PROPERTIES_     CL_CONTEXT_INFO = C.CL_CONTEXT_PROPERTIES
 )
 
 func CLGetPlatformIDs(numEntries CL_UINT, platforms []CL_PLATFORM_ID, numPlatforms *CL_UINT) CL_INT {
@@ -176,7 +196,28 @@ func CLRetainDevice(device CL_DEVICE_ID) CL_INT {
 	return CL_INT(C.clRetainDevice(device_))
 }
 
-func clReleaseDevice(device CL_DEVICE_ID) CL_INT {
+func CLReleaseDevice(device CL_DEVICE_ID) CL_INT {
 	device_ := (C.cl_device_id)(device)
 	return CL_INT(C.clReleaseDevice(device_))
+}
+
+// func clCreateContext
+// func clCreateContextFromType
+
+func CLRetainContext(context CL_CONTEXT) CL_INT {
+	context_ := (C.cl_context)(context)
+	return CL_INT(C.clRetainContext(context_))
+}
+
+func CLReleaseContext(context CL_CONTEXT) CL_INT {
+	context_ := (C.cl_context)(context)
+	return CL_INT(C.clReleaseContext(context_))
+}
+
+func CLGetContextInfo(context CL_CONTEXT, paramName CL_CONTEXT_INFO, paramValueSize CL_SIZE_T, paramValue unsafe.Pointer, paramValueSizeRet *CL_SIZE_T) CL_INT {
+	context_ := (C.cl_context)(context)
+	paramName_ := (C.cl_context_info)(paramName)
+	paramValueSize_ := (C.size_t)(paramValueSize)
+	paramValueSizeRet_ := (*C.size_t)(paramValueSizeRet)
+	return CL_INT(C.clGetContextInfo(context_, paramName_, paramValueSize_, paramValue, paramValueSizeRet_))
 }
