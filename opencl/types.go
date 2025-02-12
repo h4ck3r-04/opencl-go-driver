@@ -29,4 +29,7 @@ type (
 	CL_CONTEXT_PROPERTIES        C.cl_context_properties
 	CL_CONTEXT_INFO              C.cl_context_info
 	CL_CHAR                      C.char
+	CL_COMMAND_QUEUE             C.cl_command_queue
+	CL_COMMAND_QUEUE_PROPERTIES  C.cl_command_queue_properties
+	CL_COMMAND_QUEUE_INFO        C.cl_command_queue_info
 )
