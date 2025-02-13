@@ -32,4 +32,7 @@ type (
 	CL_COMMAND_QUEUE             C.cl_command_queue
 	CL_COMMAND_QUEUE_PROPERTIES  C.cl_command_queue_properties
 	CL_COMMAND_QUEUE_INFO        C.cl_command_queue_info
+	CL_MEM                       C.cl_mem
+	CL_MEM_FLAGS                 C.cl_mem_flags
+	CL_BUFFER_CREATE_TYPE        C.cl_buffer_create_type
 )
