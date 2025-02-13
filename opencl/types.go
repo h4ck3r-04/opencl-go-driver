@@ -35,4 +35,6 @@ type (
 	CL_MEM                       C.cl_mem
 	CL_MEM_FLAGS                 C.cl_mem_flags
 	CL_BUFFER_CREATE_TYPE        C.cl_buffer_create_type
+	CL_BOOL                      C.cl_bool
+	CL_EVENT                     C.cl_event
 )
