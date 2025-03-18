@@ -131,3 +131,15 @@ func CLEnqueueCopyBufferRect(commandQueue CL_COMMAND_QUEUE, srcBuffer CL_MEM, ds
 	event_ := (*C.cl_event)(event)
 	return CL_INT(C.clEnqueueCopyBufferRect(commandQueue_, srcBuffer_, dstBuffer_, srcOrigin_, dstOrigin_, region_, srcRowPitch_, srcSlicePitch_, dstRowPitch_, dstSlicePitch_, numEventsInWaitList_, eventWaitList_, event_))
 }
+
+// func clEnqueueMapBuffer
+
+func CLRetainMemObject(memobj CL_MEM) CL_INT {
+	memobj_ := (C.cl_mem)(memobj)
+	return CL_INT(C.clRetainMemObject(memobj_))
+}
+
+func CLReleaseMemObject(memobj CL_MEM) CL_INT {
+	memobj_ := (C.cl_mem)(memobj)
+	return CL_INT(C.clReleaseMemObject(memobj_))
+}
